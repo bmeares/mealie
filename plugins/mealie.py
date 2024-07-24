@@ -11,10 +11,11 @@ import meerschaum as mrsm
 from meerschaum.config import get_plugin_config, write_plugin_config
 from meerschaum.connectors import Connector, make_connector
 from meerschaum.actions import make_action
+from meerschaum.utils.process import run_process
 
 requests = mrsm.attempt_import('requests', venv='mealie')
 
-__version__ = '0.0.1'
+__version__ = '0.0.2'
 
 required = ['requests']
 
@@ -64,25 +65,3 @@ class MealieConnector(Connector):
             key=lambda x: x.get('date')
         )
         return import_docs[-1]['name']
-
-
-@make_action
-def backup_mealie(
-    connector_keys: list[str] | None = None,
-    **kwargs
-) -> mrsm.SuccessTuple:
-    """Run `mrsm backup mealie` to trigger."""
-    if not connector_keys:
-        return False, "Specify connector keys with `-c` (e.g. `-c mealie:foo`)."
-
-    ck = connector_keys[0]
-    connector = mrsm.get_connector(ck)
-    if connector is None:
-        return False, f"'{ck}' is not a valid connector."
-
-    success, msg = connector.create_backup()
-    if not success:
-        return success, msg
-
-    filename = connector.get_latest_backup_name()
-    return True, f"Created backup '{filename}'."
