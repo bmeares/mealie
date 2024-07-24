@@ -11,11 +11,10 @@ import meerschaum as mrsm
 from meerschaum.config import get_plugin_config, write_plugin_config
 from meerschaum.connectors import Connector, make_connector
 from meerschaum.actions import make_action
-from meerschaum.utils.process import run_process
 
 requests = mrsm.attempt_import('requests', venv='mealie')
 
-__version__ = '0.0.2'
+__version__ = '0.0.3'
 
 required = ['requests']
 
